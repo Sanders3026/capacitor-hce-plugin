@@ -24,6 +24,18 @@
 
         </activity>
 
+        <service android:name="com.thanmgan22.plugins.nfchce.KHostApduService"
+                    android:exported="true"
+                    android:enabled="true"
+                    android:permission="android.permission.BIND_NFC_SERVICE">
+            <intent-filter>
+                <action android:name="android.nfc.cardemulation.action.HOST_APDU_SERVICE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        <meta-data android:name="android.nfc.cardemulation.host_apdu_service"
+                    android:resource="@xml/apduservice"/>
+        </service>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -36,6 +48,9 @@
     </application>
 
     <!-- Permissions -->
-
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-feature android:name="android.hardware.nfc" android:required="true" />
+    <uses-feature android:name="android.hardware.nfc.hce" android:required="true" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

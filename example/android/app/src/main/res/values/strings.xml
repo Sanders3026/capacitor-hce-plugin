@@ -4,4 +4,6 @@
     <string name="title_activity_main">example</string>
     <string name="package_name">com.example.plugin</string>
     <string name="custom_url_scheme">com.example.plugin</string>
+    <string name="servicedesc">servicedesc</string>
+    <string name="aiddescription">aiddescription</string>
 </resources>
