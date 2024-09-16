@@ -68,6 +68,9 @@ npx cap sync
 * [`isNfcHceSupported()`](#isnfchcesupported)
 * [`isSecureNfcEnabled()`](#issecurenfcenabled)
 * [`enableApduService(...)`](#enableapduservice)
+* [`addListener('onStatusChanged', ...)`](#addlisteneronstatuschanged-)
+* [Interfaces](#interfaces)
+* [Enums](#enums)
 
 </docgen-index>
 
@@ -157,5 +160,44 @@ enableApduService(options: { enable: boolean; }) => Promise<{ enabled: boolean; 
 **Returns:** <code>Promise&lt;{ enabled: boolean; }&gt;</code>
 
 --------------------
+
+
+### addListener('onStatusChanged', ...)
+
+```typescript
+addListener(eventName: 'onStatusChanged', listenerFunc: (orientation: { type: ReaderStatusType; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+| Param              | Type                                                                                               |
+| ------------------ | -------------------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'onStatusChanged'</code>                                                                     |
+| **`listenerFunc`** | <code>(orientation: { type: <a href="#readerstatustype">ReaderStatusType</a>; }) =&gt; void</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+--------------------
+
+
+### Interfaces
+
+
+#### PluginListenerHandle
+
+| Prop         | Type                                      |
+| ------------ | ----------------------------------------- |
+| **`remove`** | <code>() =&gt; Promise&lt;void&gt;</code> |
+
+
+### Enums
+
+
+#### ReaderStatusType
+
+| Members                   | Value                                |
+| ------------------------- | ------------------------------------ |
+| **`CardEmulatorStarted`** | <code>'card-emulator-started'</code> |
+| **`ScanError`**           | <code>'scan-error'</code>            |
+| **`ScanCompleted`**       | <code>'scan-completed'</code>        |
+| **`CardEmulatorStopped`** | <code>'card-emulator-stopped'</code> |
 
 </docgen-api>

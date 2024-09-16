@@ -1,6 +1,19 @@
 import { HCECapacitorPlugin } from 'capacitor-hce-plugin';
-
+const logHistory = [];
 document.addEventListener("DOMContentLoaded", async (event) => {
+
+    await HCECapacitorPlugin.addListener(
+        'onStatusChanged',
+        (info) => {
+            logHistory.push(
+                { message: info.eventName, timestamp: new Date().toISOString() }
+            )
+            const newLogHistory = logHistory.slice()
+            const liHtmlContent = newLogHistory.reverse().map(l => `<li><strong>${l.message}</strong> | ${l.timestamp}</li>`)
+            document.getElementById('log-history').innerHTML = liHtmlContent.join('')
+        },
+      )
+
     const isNfcSupported = await HCECapacitorPlugin.isNfcSupported();
     if(isNfcSupported.supported) {
         document.getElementById('nfc-is-supported').style.display = 'block';
@@ -28,8 +41,6 @@ document.addEventListener("DOMContentLoaded", async (event) => {
     } else {
         document.getElementById('secure-nfc-is-not-enabled').style.display = 'block';
     }
-    
-
 });
 
 window.stopHCE = async () => {

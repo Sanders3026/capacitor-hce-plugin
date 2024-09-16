@@ -1,6 +1,5 @@
 package com.thanmgan22.plugins.nfchce
 
-import android.app.Activity
 import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -8,20 +7,30 @@ import android.nfc.NfcAdapter
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-
 import com.getcapacitor.JSObject
 import com.getcapacitor.Plugin
 import com.getcapacitor.PluginCall
 import com.getcapacitor.PluginMethod
 import com.getcapacitor.annotation.CapacitorPlugin
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 @CapacitorPlugin(name = "HCECapacitorPlugin")
 class HCECapacitorPluginPlugin : Plugin() {
-
+    
     private var mNfcAdapter: NfcAdapter? = null
 
     override fun load() {
+        EventBus.getDefault().register(this)
         mNfcAdapter = NfcAdapter.getDefaultAdapter(activity)
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: KHostApduService.MessageEvent) {
+        val ret = JSObject()
+        ret.put("eventName", event.resultData)
+        notifyListeners("onStatusChanged", ret)
+        Log.i("NFC HCE", event.resultData)
     }
 
     @PluginMethod

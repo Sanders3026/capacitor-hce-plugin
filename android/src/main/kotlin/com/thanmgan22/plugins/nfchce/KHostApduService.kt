@@ -12,8 +12,10 @@ import android.util.Log
 import java.io.*
 import java.math.BigInteger
 import java.nio.charset.Charset
+import org.greenrobot.eventbus.EventBus
 
 class KHostApduService : HostApduService() {
+    data class MessageEvent(val resultData: String)
 
     private val TAG = "HostApduService"
 
@@ -130,7 +132,7 @@ class KHostApduService : HostApduService() {
         if (intent?.hasExtra("content")!!
             && intent.hasExtra("mimeType")
             && intent.hasExtra("persistMessage")) {
-
+            EventBus.getDefault().post(MessageEvent("card-emulator-started"))
             val content = intent.getStringExtra("content")!!
             val mimeType = intent.getStringExtra("mimeType")!!
             val persistMessage = intent.getBooleanExtra("persistMessage", true)
@@ -165,6 +167,7 @@ class KHostApduService : HostApduService() {
 
     override fun processCommandApdu(commandApdu: ByteArray, extras: Bundle?): ByteArray? {
 
+
         //
         // The following flow is based on Appendix E "Example of Mapping Version 2.0 Command Flow"
         // in the NFC Forum specification
@@ -182,6 +185,7 @@ class KHostApduService : HostApduService() {
 
         if (commandApdu.size < 5) {
             Log.i(TAG, "Received incomplete command APDU. Our Response: " + A_ERROR.toHex());
+            EventBus.getDefault().post(MessageEvent("scan-error"))
             return A_ERROR;
         }
 
@@ -262,6 +266,8 @@ class KHostApduService : HostApduService() {
 
             Log.i(TAG, "NDEF_READ_BINARY triggered. Our Response: " + response.toHex())
 
+            EventBus.getDefault().post(MessageEvent("scan-completed"))
+
             READ_CAPABILITY_CONTAINER_CHECK = false
             return response
         }
@@ -270,11 +276,15 @@ class KHostApduService : HostApduService() {
         // We're doing something outside our scope
         //
         Log.wtf(TAG, "processCommandApdu() | I don't know what's going on!!!")
+        EventBus.getDefault().post(MessageEvent("scan-error"))
         return A_ERROR
     }
 
     override fun onDeactivated(reason: Int) {
         Log.i(TAG, "onDeactivated() Fired! Reason: $reason")
+        NDEF_MESSAGE = "DEFAULT_CONTENT"
+        deleteNdefMessageFile(this)
+        EventBus.getDefault().post(MessageEvent("card-emulator-stopped"))
     }
 
     private val HEX_CHARS = "0123456789ABCDEF".toCharArray()
@@ -378,6 +388,7 @@ class KHostApduService : HostApduService() {
         Log.i("onDestroy()", "KHostApduService is stop")
         NDEF_MESSAGE = "DEFAULT_CONTENT"
         deleteNdefMessageFile(this)
+        EventBus.getDefault().post(MessageEvent("card-emulator-stopped"))
         super.onDestroy()
     }
 
