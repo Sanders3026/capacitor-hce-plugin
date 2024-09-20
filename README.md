@@ -25,7 +25,7 @@ npx cap sync
 
 2) Register service to your `AndroidManifest.xml`.
    ````xml
-    <service android:name="com.novice.flutter_nfc_hce.KHostApduService"
+    <service android:name="com.thanmgan22.plugins.nfchce.KHostApduService"
                  android:exported="true"
                  android:enabled="true"
                  android:permission="android.permission.BIND_NFC_SERVICE">

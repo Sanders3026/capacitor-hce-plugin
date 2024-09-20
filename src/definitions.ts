@@ -17,6 +17,6 @@ export interface HCECapacitorPluginPlugin {
   enableApduService(options: { enable: boolean }): Promise<{ enabled: boolean }>;
   addListener(
     eventName: 'onStatusChanged',
-    listenerFunc: (orientation: { type: ReaderStatusType }) => void,
+    listenerFunc: (response: { eventName: ReaderStatusType }) => void,
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 }
