@@ -165,13 +165,13 @@ enableApduService(options: { enable: boolean; }) => Promise<{ enabled: boolean; 
 ### addListener('onStatusChanged', ...)
 
 ```typescript
-addListener(eventName: 'onStatusChanged', listenerFunc: (orientation: { type: ReaderStatusType; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'onStatusChanged', listenerFunc: (response: { eventName: ReaderStatusType; }) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
 ```
 
-| Param              | Type                                                                                               |
-| ------------------ | -------------------------------------------------------------------------------------------------- |
-| **`eventName`**    | <code>'onStatusChanged'</code>                                                                     |
-| **`listenerFunc`** | <code>(orientation: { type: <a href="#readerstatustype">ReaderStatusType</a>; }) =&gt; void</code> |
+| Param              | Type                                                                                                 |
+| ------------------ | ---------------------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'onStatusChanged'</code>                                                                       |
+| **`listenerFunc`** | <code>(response: { eventName: <a href="#readerstatustype">ReaderStatusType</a>; }) =&gt; void</code> |
 
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
 
