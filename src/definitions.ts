@@ -8,6 +8,9 @@ enum ReaderStatusType {
 }
 
 export interface HCECapacitorPluginPlugin {
+  StartEmulation(options: { Data: string }): Promise<{ Data: string }>;
+  addListener(eventName: 'sessionInvalidated', listener: (event: any) => void): Promise<void>;
+  removeListener(eventName: 'sessionInvalidated', listener: (event: any) => void): Promise<void>;
   startNfcHce(options: { content: string, mimeType?: string, persistMessage?: boolean }): Promise<{ success: boolean }>;
   stopNfcHce(): Promise<{ success: boolean }>;
   isNfcSupported(): Promise<{ supported: boolean }>;
