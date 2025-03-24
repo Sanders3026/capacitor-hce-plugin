@@ -61,6 +61,9 @@ npx cap sync
 
 <docgen-index>
 
+* [`StartEmulation(...)`](#startemulation)
+* [`addListener('sessionInvalidated', ...)`](#addlistenersessioninvalidated-)
+* [`removeListener(...)`](#removelistener)
 * [`startNfcHce(...)`](#startnfchce)
 * [`stopNfcHce()`](#stopnfchce)
 * [`isNfcSupported()`](#isnfcsupported)
@@ -76,6 +79,49 @@ npx cap sync
 
 <docgen-api>
 <!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
+
+### StartEmulation(...)
+
+```typescript
+StartEmulation(options: { Data: string; }) => Promise<{ Data: string; }>
+```
+
+| Param         | Type                           |
+| ------------- | ------------------------------ |
+| **`options`** | <code>{ Data: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ Data: string; }&gt;</code>
+
+--------------------
+
+
+### addListener('sessionInvalidated', ...)
+
+```typescript
+addListener(eventName: 'sessionInvalidated', listener: (event: any) => void) => Promise<void>
+```
+
+| Param           | Type                                 |
+| --------------- | ------------------------------------ |
+| **`eventName`** | <code>'sessionInvalidated'</code>    |
+| **`listener`**  | <code>(event: any) =&gt; void</code> |
+
+--------------------
+
+
+### removeListener(...)
+
+```typescript
+removeListener(eventName: 'sessionInvalidated', listener: (event: any) => void) => Promise<void>
+```
+
+| Param           | Type                                 |
+| --------------- | ------------------------------------ |
+| **`eventName`** | <code>'sessionInvalidated'</code>    |
+| **`listener`**  | <code>(event: any) =&gt; void</code> |
+
+--------------------
+
 
 ### startNfcHce(...)
 
