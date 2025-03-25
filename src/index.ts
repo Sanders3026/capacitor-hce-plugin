@@ -1,7 +1,10 @@
 import { registerPlugin } from '@capacitor/core';
 import type { HCECapacitorPluginPlugin } from './definitions';
-import App from './App';
+import { default as App } from './App';  // Import App correctly
+import Home from './pages/Home';
 const HCECapacitorPlugin = registerPlugin<HCECapacitorPluginPlugin>('HCECapacitorPlugin');
 
 export * from './definitions';
-export { HCECapacitorPlugin,App };
+export {HCECapacitorPlugin};
+export {App}
+export{Home}
