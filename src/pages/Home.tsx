@@ -29,7 +29,7 @@ const Home: React.FC = () => {
           <div className={`nfc-tag-overlay ${!started ? "slide-up" : ""}`}>
             <div className="nfc-tag">
               <img 
-                src="/icon_padding.png" 
+                src="icon_padding.png" 
                 alt="NFC Tag" 
                 style={{ width: '80%', height: '80%', objectFit: 'contain' }}
               />
