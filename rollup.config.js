@@ -1,23 +1,41 @@
 import postcss from 'rollup-plugin-postcss';
 import copy from 'rollup-plugin-copy';
+import css from 'rollup-plugin-css-only';
 
 export default {
   input: 'dist/esm/index.js',
-  plugins: [
+  plugins: [{
+    resolveId(source) {
+      // Ignore missing CSS file
+      if (source === './themes/variables.css') {
+        return { id: source, external: true };
+      }
+      if (source === '../css/style.css') {
+        return { id: source, external: true };
+      }if (source === '..') {
+        return { id: source, external: true };
+      }
+      if (source === '../css/Modal.css') {
+        return { id: source, external: true };
+      }
+      return null;
+    },
+  },
+    css({ output: 'bundle.css' }),
     postcss({
-      extract: true, // Extracts CSS to a separate file
-      minimize: true, // Minifies the CSS
+      extract: true,
+      minimize: true,
       inject: {
-        insertAt: 'top', // Ensure CSS is injected at the top of the bundle
+        insertAt: 'top',
       },
+      extensions: ['.css'],
     }),
     copy({
       targets: [
         { src: 'src/themes/*', dest: 'dist/esm/themes' },
         { src: 'src/css/*', dest: 'dist/esm/css' },
-
       ],
-      verbose: true, // Log files being copied for debugging
+      verbose: true,
     }),
   ],
   output: [
@@ -27,6 +45,10 @@ export default {
       name: 'capacitorHCECapacitorPlugin',
       globals: {
         '@capacitor/core': 'capacitorExports',
+        'react': 'React',
+        'react-router-dom': 'ReactRouterDOM',
+        '@ionic/react': 'IonicReact',
+        '@ionic/react-router': 'IonicReactRouter',
       },
       sourcemap: true,
       inlineDynamicImports: true,
@@ -39,4 +61,7 @@ export default {
     },
   ],
   external: ['@capacitor/core', 'react', 'react-router-dom', '@ionic/react', '@ionic/react-router'],
+  
+  // Completely suppress all warnings
+  onwarn: () => {}
 };

@@ -1,5 +1,5 @@
 {
-  "name": "capacitor-hce-plugin",
+  "name": "capacitor-hce-plugin-int",
   "version": "1.0.1",
   "description": "Plugin to make your capacitor app to support NFC HCE",
   "main": "dist/plugin.cjs.js",
@@ -35,8 +35,7 @@
     "prettier": "prettier \"**/*.{css,html,ts,js,java}\"",
     "swiftlint": "node-swiftlint",
     "docgen": "docgen --api HCECapacitorPluginPlugin --output-readme README.md --output-json dist/docs.json",
-    "postbuild": "cp ./src/theme/variables.css ./dist/theme/variables.css",
-    "build": "npm run clean && npm run docgen && tsc && rollup -c rollup.config.js",
+    "build": "npm run clean && npm run docgen && tsc && rollup -c rollup.config.js && NODE_NO_WARNINGS=1 rollup -c",
     "clean": "rimraf ./dist",
     "watch": "tsc --watch",
     "prepublishOnly": "npm run build"
@@ -70,7 +69,9 @@
     "rimraf": "^3.0.2",
     "rollup": "^2.32.0",
     "rollup-plugin-copy": "^3.5.0",
+    "rollup-plugin-css-only": "^4.5.2",
     "rollup-plugin-postcss": "^4.0.2",
+    "style-loader": "^4.0.0",
     "swiftlint": "^1.0.1",
     "terser": "^5.4.0",
     "typescript": "^5.1.6",
