@@ -1,6 +1,6 @@
 {
   "name": "capacitor-hce-plugin-int",
-  "version": "1.0.1",
+  "version": "1.0.6",
   "description": "Plugin to make your capacitor app to support NFC HCE",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
@@ -9,7 +9,10 @@
   "files": [
     "android/src/main/",
     "android/build.gradle",
-    "dist/"
+    "dist/",
+    "ios",
+    "CapacitorHcePluginInt.podspec"
+    
   ],
   "author": "thangman22",
   "license": "MIT",
