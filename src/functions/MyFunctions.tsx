@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useRef, useState, ReactNode } fro
 import { Capacitor } from "@capacitor/core";
 import StartIosEmulation from "./IosEmulation";
 import { HCECapacitorPlugin } from "..";
+
 interface NfcContextType {
   datas: string;
   setDatas: (value: string) => void;
@@ -13,33 +14,27 @@ interface NfcContextType {
   stopEmulation: () => Promise<void>;
 }
 
-
 const NfcContext = createContext<NfcContextType | undefined>(undefined);
 
-export const NfcProvider = ({ children }: { children: ReactNode }) => {
-  const [datas, setDatas] = useState<string>("");
+export const NfcProvider = ({ children, initialValue }: { children: ReactNode; initialValue: string }) => {
+  const [datas, setDatas] = useState<string>(initialValue);
   const [started, setStarted] = useState(false);
-  const datasRef = useRef<string>("");
+  const datasRef = useRef<string>(initialValue);
   const [scanCompleted, setScanCompleted] = useState(false);
   const [scanError, setScanError] = useState(false);
 
- 
+  if (Capacitor.getPlatform() === "ios") {
+    useEffect(() => {
+      //@ts-ignore
+      const listener = HCECapacitorPlugin.addListener("sessionInvalidated", (event) => {
+        setStarted(false);
+      });
 
- 
-  if (Capacitor.getPlatform()==="ios") {
-    
-  useEffect(() => {
-    //@ts-ignore
-    const listener = HCECapacitorPlugin.addListener("sessionInvalidated", (event) => {
-      setStarted(false);  
-      
-    });
-  
-    return () => {
+      return () => {
+      };
+    }, []);
+  }
 
-    };
-  }, []);
-}
   const change = (e: CustomEvent) => {
     const newValue = e.detail.value || "";
     setDatas(newValue);
@@ -54,14 +49,12 @@ export const NfcProvider = ({ children }: { children: ReactNode }) => {
           setStarted(true);
         } catch (error) {
           console.error("Error starting NFC emulation on iOS:", error);
-          console.log(error);
           alert(`Failed to start NFC emulation on iOS: ${error}`);
         }
       } else {
         alert("Please enter data to emulate.");
       }
     } else if (Capacitor.getPlatform() === "android") {
-      // For Android, use the startNfcHce
       if (datasRef.current) {
         try {
           await HCECapacitorPlugin.startNfcHce({

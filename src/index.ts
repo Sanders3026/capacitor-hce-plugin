@@ -7,4 +7,4 @@ const HCECapacitorPlugin = registerPlugin<HCECapacitorPluginPlugin>('HCECapacito
 export * from './definitions';
 export {HCECapacitorPlugin};
 export {App}
-export{Home}
+export default Home
