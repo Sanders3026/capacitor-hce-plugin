@@ -25,11 +25,22 @@ export const NfcProvider = ({ children, initialValue }: { children: ReactNode; i
 
   if (Capacitor.getPlatform() === "ios") {
     useEffect(() => {
-      //@ts-ignore
-      const listener = HCECapacitorPlugin.addListener("sessionInvalidated", (event) => {
+      let isNfcDataCompleteTriggered = false; 
+      HCECapacitorPlugin.addListener("nfcDataComplete", () => {
+        setTimeout(() => {
           setStarted(false);
+        }, 3000);
+        isNfcDataCompleteTriggered = true; 
       });
+    
+      HCECapacitorPlugin.addListener("sessionInvalidated", () => {
+        if (!isNfcDataCompleteTriggered) {
+          setStarted(false);
+        }
+      });
+    
       return () => {
+        
       };
     }, []);
   }

@@ -62,7 +62,7 @@ npx cap sync
 <docgen-index>
 
 * [`StartIosEmulation(...)`](#startiosemulation)
-* [`addListener('sessionInvalidated', ...)`](#addlistenersessioninvalidated-)
+* [`addListener('sessionInvalidated' | 'nfcDataComplete', ...)`](#addlistenersessioninvalidated--nfcdatacomplete-)
 * [`removeListener(...)`](#removelistener)
 * [`startNfcHce(...)`](#startnfchce)
 * [`stopNfcHce()`](#stopnfchce)
@@ -95,16 +95,16 @@ StartIosEmulation(options: { Data: string; }) => Promise<{ Data: string; }>
 --------------------
 
 
-### addListener('sessionInvalidated', ...)
+### addListener('sessionInvalidated' | 'nfcDataComplete', ...)
 
 ```typescript
-addListener(eventName: 'sessionInvalidated', listener: (event: any) => void) => Promise<void>
+addListener(eventName: 'sessionInvalidated' | 'nfcDataComplete', listener: (event: any) => void) => Promise<void>
 ```
 
-| Param           | Type                                 |
-| --------------- | ------------------------------------ |
-| **`eventName`** | <code>'sessionInvalidated'</code>    |
-| **`listener`**  | <code>(event: any) =&gt; void</code> |
+| Param           | Type                                                   |
+| --------------- | ------------------------------------------------------ |
+| **`eventName`** | <code>'sessionInvalidated' \| 'nfcDataComplete'</code> |
+| **`listener`**  | <code>(event: any) =&gt; void</code>                   |
 
 --------------------
 
@@ -112,13 +112,13 @@ addListener(eventName: 'sessionInvalidated', listener: (event: any) => void) => 
 ### removeListener(...)
 
 ```typescript
-removeListener(eventName: 'sessionInvalidated', listener: (event: any) => void) => Promise<void>
+removeListener(eventName: 'sessionInvalidated' | 'nfcDataComplete', listener: (event: any) => void) => Promise<void>
 ```
 
-| Param           | Type                                 |
-| --------------- | ------------------------------------ |
-| **`eventName`** | <code>'sessionInvalidated'</code>    |
-| **`listener`**  | <code>(event: any) =&gt; void</code> |
+| Param           | Type                                                   |
+| --------------- | ------------------------------------------------------ |
+| **`eventName`** | <code>'sessionInvalidated' \| 'nfcDataComplete'</code> |
+| **`listener`**  | <code>(event: any) =&gt; void</code>                   |
 
 --------------------
 

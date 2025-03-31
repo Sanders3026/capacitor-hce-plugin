@@ -153,6 +153,8 @@ public class IosEmulator: CAPPlugin {
                             
                             if isComplete {
                                 print("NDEF data transfer complete, stopping emulation.")
+                                self.notifyListeners("nfcDataComplete", data: ["message": "NFC data transfer"])
+                            call.resolve()
                                 await cardSession.stopEmulation(status: .success)
                                 
                                 cardSession.invalidate()
