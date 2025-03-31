@@ -6,7 +6,7 @@ import "../css/StartButton.css"
 
 
 const Home: React.FC = () => {
-  const { startEmulation } = useNfc(); // Pass ref to useNfc
+  const { startEmulation } = useNfc(); 
 
   return (
     <div>

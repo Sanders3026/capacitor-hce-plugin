@@ -33,16 +33,16 @@ const Modal: React.FC = () => {
         <div className="text-container">
           <IonText color={scanError ? "danger" : scanCompleted ? "success" : "medium"}>
             <h1 className="title">
-              {scanError ? 'Scan Error!' : scanCompleted ? 'Success!' : 'Ready to Scan'}
+              {scanError ? 'Notikusi kļūda.!' : scanCompleted ? 'Success!' : 'Ready to Scan'}
             </h1>
           </IonText>
           <IonText color="medium">
             <p className="description">
               {scanError 
-                ? 'Error during NFC scan. Please try again.'
+                ? 'Notikusi kļūda. Lūdzu mēģiniet vēlreiz!'
                 : scanCompleted 
-                ? 'Data successfully transmitted'
-                : 'Hold device near NFC reader'}
+                ? 'Apstiprināts!'
+                : 'Novietojiet ierīci virs NFC lasītāja.'}
             </p>
           </IonText>
         </div>

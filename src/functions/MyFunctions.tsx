@@ -64,25 +64,43 @@ export const NfcProvider = ({ children, initialValue }: { children: ReactNode; i
       } else {
         alert("Please enter data to emulate.");
       }
-    } else if (Capacitor.getPlatform() === "android") {
-      if (datasRef.current) {
-        try {
-          await HCECapacitorPlugin.startNfcHce({
-            content: datasRef.current,
-            persistMessage: false,
-            mimeType: "text/plain",
-          });
-          setStarted(true);
-        } catch (error) {
-          console.error("Error starting NFC emulation on Android:", error);
-          alert(`Failed to start NFC emulation on Android: ${error}`);
-        }
-      } else {
-        alert("Please enter data to emulate.");
+    } useEffect(() => {
+      if (Capacitor.getPlatform() === "android") {
+        const timeout = setTimeout(() => {
+          if (started) {
+            console.log("Stopping NFC emulation due to timeout.");
+            stopEmulation();
+          }
+        }, 15000); 
+    
+        const listener = HCECapacitorPlugin.addListener("onStatusChanged", (status: any) => {
+          console.log("NFC Status:", status.eventName);
+    
+          if (status.eventName === "card-emulator-started") {
+            setStarted(true);
+          }
+          if (status.eventName === "scan-completed") {
+            setScanCompleted(true);
+            clearTimeout(timeout); 
+            setTimeout(() => setScanCompleted(false), 3000);
+            setTimeout(() => {
+              setStarted(false);
+            }, 2900);
+          }
+          if (status.eventName === "scan-error") {
+            setScanError(true);
+            setScanCompleted(false);
+            clearTimeout(timeout); 
+            setTimeout(() => setScanError(false), 3000);
+          }
+        });
+    
+        return () => {
+          clearTimeout(timeout);
+          listener.remove();
+        };
       }
-    } else {
-      alert("NFC emulation is only supported on iOS and Android.");
-    }
+    }, [started]);
   };
 
   const stopEmulation = async () => {
