@@ -1,9 +1,8 @@
 import React from 'react';
-import { IonButton } from '@ionic/react';
 import { useNfc } from '../functions/MyFunctions';
 import Modal from '../components/AndroidSheet';
 import { NfcScreen } from '../components/NfcTagView';
-
+import "../css/StartButton.css"
 
 
 const Home: React.FC = () => {
@@ -12,14 +11,9 @@ const Home: React.FC = () => {
   return (
     <div>
       <NfcScreen />
-      <IonButton
-        expand="block"
-        onClick={startEmulation}
-        aria-label="Start NFC Emulation"
-        style={{ marginTop: '2rem' }}
-      >
-        Start Emulation
-      </IonButton>
+      <button className="start-button" onClick={startEmulation}>
+        <img src="icon_padding.png" alt="Start"/>
+      </button>
       <Modal />
     </div>
   );

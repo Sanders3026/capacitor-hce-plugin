@@ -1,10 +1,9 @@
 import { registerPlugin } from '@capacitor/core';
 import type { HCECapacitorPluginPlugin } from './definitions';
-import { default as App } from './App';  // Import App correctly
-import Home from './pages/Home';
+import { default as NfcEmulation } from './App';  // Import App correctly
 const HCECapacitorPlugin = registerPlugin<HCECapacitorPluginPlugin>('HCECapacitorPlugin');
 
 export * from './definitions';
 export {HCECapacitorPlugin};
-export {App}
-export default Home
+export {NfcEmulation};
+

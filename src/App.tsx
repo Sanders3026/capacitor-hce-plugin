@@ -15,7 +15,7 @@ setupIonicReact();
 interface AppProps {
   data: string;
 }
-const App: React.FC<AppProps> = ({ data }) => {
+const NfcEmulation: React.FC<AppProps> = ({ data }) => {
   const paramRef = useRef<string>(data); // Create a ref
 
   return (
@@ -25,4 +25,4 @@ const App: React.FC<AppProps> = ({ data }) => {
   );
 };
 
-export default App;
+export default NfcEmulation;

@@ -15,7 +15,12 @@
     "pretty": true,
     "sourceMap": true,
     "strict": true,
-    "target": "es2017"
+    "target": "es2017",
+    "baseUrl": ".",
+
+    "paths": {
+      "@css/*": ["src/css/*"]
+    }
   },
   "files": ["src/index.ts"]
 }

@@ -1,6 +1,5 @@
 import postcss from 'rollup-plugin-postcss';
 import copy from 'rollup-plugin-copy';
-import css from 'rollup-plugin-css-only';
 
 export default {
   input: 'dist/esm/index.js',
@@ -18,10 +17,12 @@ export default {
       if (source === '../css/Modal.css') {
         return { id: source, external: true };
       }
+      if (source === '../css/StartButton.css') {
+        return { id: source, external: true };
+      }
       return null;
     },
   },
-    css({ output: 'bundle.css' }),
     postcss({
       extract: true,
       minimize: true,

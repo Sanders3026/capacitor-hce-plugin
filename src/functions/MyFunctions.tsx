@@ -27,9 +27,8 @@ export const NfcProvider = ({ children, initialValue }: { children: ReactNode; i
     useEffect(() => {
       //@ts-ignore
       const listener = HCECapacitorPlugin.addListener("sessionInvalidated", (event) => {
-        setStarted(false);
+          setStarted(false);
       });
-
       return () => {
       };
     }, []);

@@ -6,7 +6,7 @@ import CoreNFC
 public class IosEmulator: CAPPlugin {
 
     @available(iOS 17.4, *)
-    @objc func StartEmulation(_ call: CAPPluginCall) {
+    @objc func StartIosEmulation(_ call: CAPPluginCall) {
         let stringData = call.getString("Data") ?? "Error Reading Data"
         let utf8Data = Data(stringData.utf8) // Ensure UTF-8 encoding
         let payloadLength = utf8Data.count + 3

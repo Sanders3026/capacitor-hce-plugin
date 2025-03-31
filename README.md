@@ -61,7 +61,7 @@ npx cap sync
 
 <docgen-index>
 
-* [`StartEmulation(...)`](#startemulation)
+* [`StartIosEmulation(...)`](#startiosemulation)
 * [`addListener('sessionInvalidated', ...)`](#addlistenersessioninvalidated-)
 * [`removeListener(...)`](#removelistener)
 * [`startNfcHce(...)`](#startnfchce)
@@ -80,10 +80,10 @@ npx cap sync
 <docgen-api>
 <!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
 
-### StartEmulation(...)
+### StartIosEmulation(...)
 
 ```typescript
-StartEmulation(options: { Data: string; }) => Promise<{ Data: string; }>
+StartIosEmulation(options: { Data: string; }) => Promise<{ Data: string; }>
 ```
 
 | Param         | Type                           |

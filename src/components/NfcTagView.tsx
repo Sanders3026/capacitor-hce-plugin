@@ -1,20 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { useNfc } from '../functions/MyFunctions';
-import "../css/style.css';"
+import "../css/style.css";
+
 export const NfcScreen: React.FC = () => {
-  const { started, scanError } = useNfc();
-  const [showOverlay, setShowOverlay] = useState(started);
+  const { started, scanCompleted, scanError } = useNfc();
+  const [showOverlay, setShowOverlay] = useState(false);
 
   useEffect(() => {
     if (started) {
       setShowOverlay(true);
-    } else {
-      const timer = setTimeout(() => {
-        setShowOverlay(false);
-      }, 500);
-      return () => clearTimeout(timer);
     }
-  }, [started]);
+    if (!started) {
+      setShowOverlay(false);
+    }
+
+    if (scanCompleted) {
+      const timer = setTimeout(() => {
+        setShowOverlay(false); 
+      }, 2000);
+
+      return () => {
+        clearTimeout(timer); 
+      };
+    }
+
+    return () => {
+    };
+  }, [scanCompleted, started]);
 
   return (
     showOverlay && !scanError && (
