@@ -8,7 +8,6 @@ public class IosEmulator: CAPPlugin {
 
     private var timeoutTask: DispatchWorkItem?  // Store timeout task
 
-    @available(iOS 17.4, *)
     @objc func StartIosEmulation(_ call: CAPPluginCall) {
         let stringData = call.getString("Data") ?? "Error Reading Data"
         let utf8Data = Data(stringData.utf8)
@@ -83,7 +82,7 @@ public class IosEmulator: CAPPlugin {
             
             do {
                 if await cardSession.isEmulationInProgress == false {
-                    cardSession.alertMessage = String(localized: "Hold Device Near Reader")
+                    cardSession.alertMessage = String(localized: "Novietojiet ierīci virs NFC lasītāja.")
                     try await cardSession.startEmulation()
                     print("Emulation started.")
                 }
@@ -92,73 +91,53 @@ public class IosEmulator: CAPPlugin {
                 return
             }
 
-            startTimeout(for: cardSession) // Start timeout when emulation begins
+            startTimeout(for: cardSession)
 
             for try await event in cardSession.eventStream {
                 switch event {
-                case .sessionStarted:
-                    print("Session started.")
-                    resetTimeout(for: cardSession) // Reset timeout
-                    break
-                case .readerDetected:
-                    print("Reader detected.")
-                    resetTimeout(for: cardSession) // Reset timeout
-                    break
+                case .sessionStarted, .readerDetected:
+                    startTimeout(for: cardSession)
                 case .readerDeselected:
-                    await stopEmulation(cardSession, call: call, message: "Reader deselected. Stopping emulation.")
-                    break
+                    await stopEmulation(cardSession, call: call, message: "Reader deselected. Stopping emulation.", success: true)
                 case .received(let cardAPDU):
-                    resetTimeout(for: cardSession) // Reset timeout on new APDU
-
-                    print("Received APDU: \(cardAPDU.payload.hexEncodedString())")
+                    startTimeout(for: cardSession)
                     do {
                         let (responseAPDU, isComplete) = processAPDU(cardAPDU.payload)
-                        print("Generated response APDU: \(responseAPDU.hexEncodedString())")
-
                         if !responseAPDU.isEmpty {
                             try await cardAPDU.respond(response: responseAPDU)
-                            print("Responding with APDU: \(responseAPDU.hexEncodedString())")
-
                             if isComplete {
-                                await stopEmulation(cardSession, call: call, message: "NDEF data transfer complete, stopping emulation.")
+                                await stopEmulation(cardSession, call: call, message: "NDEF data transfer complete, stopping emulation.", success: true)
                             }
                         }
                     } catch {
                         print("Error responding to APDU: \(error)")
                     }
-                    break
                 case .sessionInvalidated:
-                    await stopEmulation(cardSession, call: call, message: "Session invalidated.")
-                    break
+                    await stopEmulation(cardSession, call: call, message: "Session invalidated.", success: false)
                 }
             }
         }
     }
 
     private func startTimeout(for cardSession: CardSession) {
-        timeoutTask?.cancel()  // Cancel any existing timeout
+        timeoutTask?.cancel()
         timeoutTask = DispatchWorkItem { [weak self] in
             Task {
-                await self?.stopEmulation(cardSession, call: nil, message: "Emulation stopped due to inactivity.")
+                cardSession.alertMessage = String(localized: "Notikusi Kļūda. Mēģiniet Vēlreiz!")
+                
+                await self?.stopEmulation(cardSession, call: nil, message: "Emulation stopped due to inactivity.", success: false)
             }
-        }
+
+            }
         DispatchQueue.global().asyncAfter(deadline: .now() + 15, execute: timeoutTask!)
     }
 
-    private func resetTimeout(for cardSession: CardSession) {
-        print("Resetting timeout.")
-        startTimeout(for: cardSession)  // Restart timeout on activity
-    }
-
-    private func stopEmulation(_ cardSession: CardSession, call: CAPPluginCall?, message: String) async {
-        timeoutTask?.cancel()  // Cancel timeout
+    private func stopEmulation(_ cardSession: CardSession, call: CAPPluginCall?, message: String, success: Bool) async {
+        timeoutTask?.cancel()
         timeoutTask = nil
-
         self.notifyListeners("sessionInvalidated", data: ["message": message])
-        print(message)
-
         do {
-            await cardSession.stopEmulation(status: .success)
+            await cardSession.stopEmulation(status: success ? .success : .failure)
             cardSession.invalidate()
             call?.resolve()
         } catch {

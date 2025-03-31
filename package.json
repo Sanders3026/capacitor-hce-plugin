@@ -1,6 +1,6 @@
 {
   "name": "capacitor-hce-plugin-int",
-  "version": "1.4.9",
+  "version": "1.5.3",
   "description": "Plugin to make your capacitor app to support NFC HCE",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
@@ -18,10 +18,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/thangman22/capacitor-hce-plugin"
+    "url": "https://github.com/Sanders3026/capacitor-hce-plugin"
   },
   "bugs": {
-    "url": "https://github.com/thangman22/HCECapacitorPlugin/issues"
+    "url": "https://github.com/Sanders3026/capacitor-hce-plugin"
   },
   "keywords": [
     "capacitor",
