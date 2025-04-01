@@ -54,8 +54,13 @@ npx cap sync
     <string name="servicedesc">servicedesc</string>
     <string name="aiddescription">aiddescription</string>
     </resources>
-    ````  
-## Ios Setup
+    ````
+## Ios Setup 
+1) Vajag Pieteikties Apple Ios HCE entitelment. Kad piesakās norādīt AID kā D2760000850101
+2) Pievienot Apple HCE pie sava projekta Xcode
+
+
+## Izmantošana
 
 1) Importēt Galveno Module
     ````tsx
