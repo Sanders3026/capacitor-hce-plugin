@@ -19,31 +19,39 @@ const NfcContext = createContext<NfcContextType | undefined>(undefined);
 export const NfcProvider = ({ children, initialValue }: { children: ReactNode; initialValue: string }) => {
   const [datas, setDatas] = useState<string>(initialValue);
   const [started, setStarted] = useState(false);
-  const datasRef = useRef<string>(initialValue);
   const [scanCompleted, setScanCompleted] = useState(false);
   const [scanError, setScanError] = useState(false);
+  const datasRef = useRef<string>(initialValue);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  if (Capacitor.getPlatform() === "ios") {
-    useEffect(() => {
-      let isNfcDataCompleteTriggered = false; 
+  const resetTimeout = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      console.log("Stopping NFC emulation due to inactivity.");
+      showErrorScreen();
+    }, 15000);
+  };
+
+  const showErrorScreen = () => {
+    setScanError(true);
+    setTimeout(() => [setScanError(false),stopEmulation()], 3000); 
+    
+  };
+
+  useEffect(() => {
+    if (Capacitor.getPlatform() === "ios") {
+      let isNfcDataCompleteTriggered = false;
+      
       HCECapacitorPlugin.addListener("nfcDataComplete", () => {
-        setTimeout(() => {
-          setStarted(false);
-        }, 3000);
-        isNfcDataCompleteTriggered = true; 
+        setTimeout(() => setStarted(false), 3000);
+        isNfcDataCompleteTriggered = true;
       });
-    
+
       HCECapacitorPlugin.addListener("sessionInvalidated", () => {
-        if (!isNfcDataCompleteTriggered) {
-          setStarted(false);
-        }
+        if (!isNfcDataCompleteTriggered) setStarted(false);
       });
-    
-      return () => {
-        
-      };
-    }, []);
-  }
+    }
+  }, []);
 
   const change = (e: CustomEvent) => {
     const newValue = e.detail.value || "";
@@ -52,6 +60,7 @@ export const NfcProvider = ({ children, initialValue }: { children: ReactNode; i
   };
 
   const startEmulation = async () => {
+
     if (Capacitor.getPlatform() === "ios") {
       if (datasRef.current) {
         try {
@@ -64,47 +73,30 @@ export const NfcProvider = ({ children, initialValue }: { children: ReactNode; i
       } else {
         alert("Please enter data to emulate.");
       }
-    } useEffect(() => {
-      if (Capacitor.getPlatform() === "android") {
-        const timeout = setTimeout(() => {
-          if (started) {
-            console.log("Stopping NFC emulation due to timeout.");
-            stopEmulation();
-          }
-        }, 15000); 
-    
-        const listener = HCECapacitorPlugin.addListener("onStatusChanged", (status: any) => {
-          console.log("NFC Status:", status.eventName);
-    
-          if (status.eventName === "card-emulator-started") {
-            setStarted(true);
-          }
-          if (status.eventName === "scan-completed") {
-            setScanCompleted(true);
-            clearTimeout(timeout); 
-            setTimeout(() => setScanCompleted(false), 3000);
-            setTimeout(() => {
-              setStarted(false);
-            }, 2900);
-          }
-          if (status.eventName === "scan-error") {
-            setScanError(true);
-            setScanCompleted(false);
-            clearTimeout(timeout); 
-            setTimeout(() => setScanError(false), 3000);
-          }
-        });
-    
-        return () => {
-          clearTimeout(timeout);
-          listener.remove();
-        };
+    } else if (Capacitor.getPlatform() === "android") {
+      if (datasRef.current) {
+        try {
+          await HCECapacitorPlugin.startNfcHce({
+            content: datasRef.current,
+            persistMessage: false,
+            mimeType: "text/plain",
+          });
+          setStarted(true);
+          resetTimeout();
+        } catch (error) {
+          console.error("Error starting NFC emulation on Android:", error);
+          alert(`Failed to start NFC emulation on Android: ${error}`);
+        }
       }
-    }, [started]);
+    }
   };
 
   const stopEmulation = async () => {
     setStarted(false);
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
     if (HCECapacitorPlugin) {
       try {
         await HCECapacitorPlugin.stopNfcHce();
@@ -119,6 +111,7 @@ export const NfcProvider = ({ children, initialValue }: { children: ReactNode; i
     if (Capacitor.getPlatform() === "android") {
       const listener = HCECapacitorPlugin.addListener("onStatusChanged", (status: any) => {
         console.log("NFC Status:", status.eventName);
+        resetTimeout();
 
         if (status.eventName === "card-emulator-started") {
           setStarted(true);
@@ -126,14 +119,11 @@ export const NfcProvider = ({ children, initialValue }: { children: ReactNode; i
         if (status.eventName === "scan-completed") {
           setScanCompleted(true);
           setTimeout(() => setScanCompleted(false), 3000);
-          setTimeout(() => {
-            setStarted(false);
-          }, 2900);
+          setTimeout(() => setStarted(false), 2900);
         }
         if (status.eventName === "scan-error") {
-          setScanError(true);
+          showErrorScreen();
           setScanCompleted(false);
-          setTimeout(() => setScanError(false), 3000);
         }
       });
 
