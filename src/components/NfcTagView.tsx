@@ -7,26 +7,12 @@ export const NfcScreen: React.FC = () => {
   const [showOverlay, setShowOverlay] = useState(false);
 
   useEffect(() => {
-    if (started) {
+    if (started && !scanCompleted) {
       setShowOverlay(true);
-    }
-    if (!started) {
+    } else {
       setShowOverlay(false);
     }
-
-    if (scanCompleted) {
-      const timer = setTimeout(() => {
-        setShowOverlay(false); 
-      }, 2000);
-
-      return () => {
-        clearTimeout(timer); 
-      };
-    }
-
-    return () => {
-    };
-  }, [scanCompleted, started]);
+  }, [started, scanCompleted]);
 
   return (
     showOverlay && !scanError && (

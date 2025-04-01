@@ -8,6 +8,7 @@ public class IosEmulator: CAPPlugin {
 
     private var timeoutTask: DispatchWorkItem?  // Store timeout task
 
+    @available(iOS 17.4, *)
     @objc func StartIosEmulation(_ call: CAPPluginCall) {
         let stringData = call.getString("Data") ?? "Error Reading Data"
         let utf8Data = Data(stringData.utf8)
@@ -126,9 +127,8 @@ public class IosEmulator: CAPPlugin {
                 cardSession.alertMessage = String(localized: "Notikusi Kļūda. Mēģiniet Vēlreiz!")
                 
                 await self?.stopEmulation(cardSession, call: nil, message: "Emulation stopped due to inactivity.", success: false)
-            }
-
-            }
+                
+            }}
         DispatchQueue.global().asyncAfter(deadline: .now() + 15, execute: timeoutTask!)
     }
 
