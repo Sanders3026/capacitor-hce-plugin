@@ -5,12 +5,11 @@ Host Card Emulation (HCE) Plugin for Capacitor / Ionic on Android. This project 
 ## Install
 
 ```bash
-npm install capacitor-hce-plugin
+npm install capacitor-hce-plugin-int
 npx cap sync
 ```
 
 ## Limitation
-- This plugin only support for Android iOS is open to contribution
 - This plugin only support NFC Type-4 Tag with NDEF message for now
 
 ## Android Setup 
@@ -56,7 +55,8 @@ npx cap sync
     <string name="aiddescription">aiddescription</string>
     </resources>
     ````  
-
+##Ios Setup
+1)
 ## API
 
 <docgen-index>
