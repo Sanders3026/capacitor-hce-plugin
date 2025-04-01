@@ -42,7 +42,34 @@ public class IosEmulator: CAPPlugin {
                 selectedFile = 0xE103
                 print("NDEF file selected")
                 return (Data([0x90, 0x00]), false)
+            if capdu == Data([0x00, 0xB0, 0x00, 0x00, 0x02]) {
+                print("Reading NDEF length")
+                    return (Data(ndefFile[0..<2]) + Data([0x90, 0x00]), false)
             }
+            }
+            if capdu == Data([0x00, 0xA4, 0x00, 0x0C, 0x02, 0xE1, 0x03]) {
+                            selectedFile = 0xE102
+                            print("CC file selected")
+                            return (Data([0x90, 0x00]), false)
+                        }
+
+                        // READ CC
+                        if capdu == Data([0x00, 0xB0, 0x00, 0x00, 0x0F]) {
+                            print("Reading CC file")
+                            return (Data([
+                                0x00, 0x0F,             // CCLEN: Length of this capability container
+                                0x20,                   // Mapping Version 2.0
+                                0x00, 0x3B,            // MLe: Maximum data size that can be read using a single ReadBinary command
+                                0x00, 0x34,            // MLc: Maximum data size that can be sent using a single UpdateBinary command
+                                0x04, 0x06,            // T, L for NDEF File Control TLV
+                                0xE1, 0x04,            // File Identifier
+                                0x04, 0x00,            // Maximum NDEF file size = 1024 bytes
+                                0x00,                  // Read access without any security
+                                0x00,                  // Write access without any security
+                                0x90, 0x00            // Success
+                            ]), false)
+                        }
+
 
             if capdu.starts(with: [0x00, 0xB0]) {
                 guard selectedFile == 0xE103 else {
