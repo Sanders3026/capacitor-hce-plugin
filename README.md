@@ -56,7 +56,19 @@ npx cap sync
     </resources>
     ````  
 ##Ios Setup
-1)
+
+1) Importēt Galveno Module
+    ````tsx
+   import {NfcEmulation} from 'capacitor-hce-plugin-int';
+    ````
+2)Izmanto kā parastu component, data parametrā ievada vērtību ko grib emulēt kā nfc tag.
+   ````tsx
+    <NfcEmulation data="Hello World!"></NfcEmulation>
+   ````
+3) January pats grib piekļūt visiem API, to var izdarīt importējot HCECapacitorPlugin
+    ````tsx
+   import { HCECapacitorPlugin } from 'capacitor-hce-plugin-int';
+   ````
 ## API
 
 <docgen-index>
