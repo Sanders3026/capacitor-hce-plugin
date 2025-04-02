@@ -8,7 +8,6 @@ public class IosEmulator: CAPPlugin {
 
     private var timeoutTask: DispatchWorkItem?  // Store timeout task
 
-    @available(iOS 17.4, *)
     @objc func StartIosEmulation(_ call: CAPPluginCall) {
         let stringData = call.getString("Data") ?? "Error Reading Data"
         let utf8Data = Data(stringData.utf8)
@@ -42,11 +41,12 @@ public class IosEmulator: CAPPlugin {
                 selectedFile = 0xE103
                 print("NDEF file selected")
                 return (Data([0x90, 0x00]), false)
+            }
             if capdu == Data([0x00, 0xB0, 0x00, 0x00, 0x02]) {
                 print("Reading NDEF length")
                     return (Data(ndefFile[0..<2]) + Data([0x90, 0x00]), false)
             }
-            }
+            
             if capdu == Data([0x00, 0xA4, 0x00, 0x0C, 0x02, 0xE1, 0x03]) {
                             selectedFile = 0xE102
                             print("CC file selected")
@@ -110,9 +110,8 @@ public class IosEmulator: CAPPlugin {
             
             do {
                 if await cardSession.isEmulationInProgress == false {
-                    cardSession.alertMessage = String(localized: "Novietojiet ierīci virs NFC lasītāja.")
+                    cardSession.alertMessage = "Novietojiet ierīci virs NFC lasītāja."
                     try await cardSession.startEmulation()
-                    print("Emulation started.")
                 }
             } catch {
                 print("Error starting emulation: \(error)")
@@ -147,12 +146,13 @@ public class IosEmulator: CAPPlugin {
         }
     }
 
-    private func startTimeout(for cardSession: CardSession) {
+     func startTimeout(for cardSession: CardSession) {
         timeoutTask?.cancel()
         timeoutTask = DispatchWorkItem { [weak self] in
             Task {
-                cardSession.alertMessage = String(localized: "Notikusi Kļūda. Mēģiniet Vēlreiz!")
-                
+                cardSession.alertMessage = "Emulation stopped due to inactivity."
+                try? await Task.sleep(nanoseconds: 001_000_000) // Wait for 0.5 seconds
+
                 await self?.stopEmulation(cardSession, call: nil, message: "Emulation stopped due to inactivity.", success: false)
                 
             }}
@@ -167,8 +167,6 @@ public class IosEmulator: CAPPlugin {
             await cardSession.stopEmulation(status: success ? .success : .failure)
             cardSession.invalidate()
             call?.resolve()
-        } catch {
-            print("Error stopping emulation: \(error)")
         }
     }
 }
