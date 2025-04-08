@@ -1,6 +1,6 @@
 # Capacitor HCE plugin
 
-Host Card Emulation (HCE) Plugin for Capacitor / Ionic on Android. This project is ported and reuse code based from https://github.com/agmo-ios-team/flutter_nfc_hce that forked for Flutter HCE Plugin https://pub.dev/packages/flutter_nfc_hce you can follow the introcuction for thier project
+Host Card Emulation (HCE) Plugin for Capacitor / Ionic on Android/ios. This project is ported and reuse code based from https://github.com/agmo-ios-team/flutter_nfc_hce that forked for Flutter HCE Plugin https://pub.dev/packages/flutter_nfc_hce you can follow the introcuction for thier project
 
 ## Install
 
