@@ -11,6 +11,7 @@ npx cap sync
 
 ## Limitation
 - This plugin only support NFC Type-4 Tag with NDEF message for now
+- Lai bildes strādātu bildi iocon_padding.png vajag ielikt sava ionic projekta Public/assets folder
 
 ## Android Setup 
 
