@@ -9,6 +9,18 @@ public class IosEmulator: CAPPlugin {
     private var timeoutTask: DispatchWorkItem?  // Store timeout task
 
     @objc func StartIosEmulation(_ call: CAPPluginCall) {
+        guard #available(iOS 17.4, *) else {
+                   call.reject("NFC card emulation requires iOS 17.4 or later")
+            self.notifyListeners("IosNotSupported", data: ["message": message])
+
+                   return
+               }
+               
+               // Validate input data
+               guard let stringData = call.getString("Data"), !stringData.isEmpty else {
+                   call.reject("Invalid NDEF data")
+                   return
+               }
         let stringData = call.getString("Data") ?? "Error Reading Data"
         let utf8Data = Data(stringData.utf8)
         let payloadLength = utf8Data.count + 3
@@ -93,20 +105,27 @@ public class IosEmulator: CAPPlugin {
             print("Unknown command")
             return (Data([0x6A, 0x82]), false)
         }
+        guard NFCReaderSession.readingAvailable else {
+            call.reject("NFC not supported on this device")
+            return
+        }
 
-        Task {
-            guard NFCReaderSession.readingAvailable else {
-                print("NFC is not available.")
-                return
-            }
-            let cardSession: CardSession
-            do {
-                cardSession = try await CardSession()
-                print("Card session acquired.")
-            } catch {
-                print("Failed to acquire NFC session: \(error)")
-                return
-            }
+        guard await CardSession.isEligible else {
+            call.reject("Device can't emulate NFC cards")
+            return
+        }
+     Task {
+    
+
+    var cardSession: CardSession
+
+    do {
+        cardSession = try await CardSession()
+        print("Card session acquired.")
+    } catch {
+        print("Failed to acquire NFC session: \(error)")
+        return
+    }
             
             do {
                 if await cardSession.isEmulationInProgress == false {

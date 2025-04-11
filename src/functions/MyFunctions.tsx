@@ -60,12 +60,15 @@ export const NfcProvider = ({ children, initialValue }: { children: ReactNode; i
   };
 
   const startEmulation = async () => {
-
     if (Capacitor.getPlatform() === "ios") {
       if (datasRef.current) {
         try {
           StartIosEmulation(datasRef.current);
+          HCECapacitorPlugin.addListener("IosNotSupported", () => {
+            alert("NFC is not supported on this device.");
+          });
           setStarted(true);
+          
         } catch (error) {
           console.error("Error starting NFC emulation on iOS:", error);
           alert(`Failed to start NFC emulation on iOS: ${error}`);

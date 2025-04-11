@@ -10,7 +10,7 @@ enum ReaderStatusType {
 export interface HCECapacitorPluginPlugin {
   StartIosEmulation(options: { Data: string }): Promise<{ Data: string }>;
   addListener(
-    eventName: 'sessionInvalidated' | 'nfcDataComplete',
+    eventName: 'sessionInvalidated' | 'nfcDataComplete'| "IosNotSupported",
     listener: (event: any) => void
   ): Promise<void>;
 

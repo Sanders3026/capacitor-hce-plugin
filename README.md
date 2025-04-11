@@ -80,7 +80,7 @@ npx cap sync
 <docgen-index>
 
 * [`StartIosEmulation(...)`](#startiosemulation)
-* [`addListener('sessionInvalidated' | 'nfcDataComplete', ...)`](#addlistenersessioninvalidated--nfcdatacomplete-)
+* [`addListener('sessionInvalidated' | 'nfcDataComplete' | 'IosNotSupported', ...)`](#addlistenersessioninvalidated--nfcdatacomplete--iosnotsupported-)
 * [`removeListener(...)`](#removelistener)
 * [`startNfcHce(...)`](#startnfchce)
 * [`stopNfcHce()`](#stopnfchce)
@@ -113,16 +113,16 @@ StartIosEmulation(options: { Data: string; }) => Promise<{ Data: string; }>
 --------------------
 
 
-### addListener('sessionInvalidated' | 'nfcDataComplete', ...)
+### addListener('sessionInvalidated' | 'nfcDataComplete' | 'IosNotSupported', ...)
 
 ```typescript
-addListener(eventName: 'sessionInvalidated' | 'nfcDataComplete', listener: (event: any) => void) => Promise<void>
+addListener(eventName: 'sessionInvalidated' | 'nfcDataComplete' | "IosNotSupported", listener: (event: any) => void) => Promise<void>
 ```
 
-| Param           | Type                                                   |
-| --------------- | ------------------------------------------------------ |
-| **`eventName`** | <code>'sessionInvalidated' \| 'nfcDataComplete'</code> |
-| **`listener`**  | <code>(event: any) =&gt; void</code>                   |
+| Param           | Type                                                                        |
+| --------------- | --------------------------------------------------------------------------- |
+| **`eventName`** | <code>'sessionInvalidated' \| 'nfcDataComplete' \| 'IosNotSupported'</code> |
+| **`listener`**  | <code>(event: any) =&gt; void</code>                                        |
 
 --------------------
 
