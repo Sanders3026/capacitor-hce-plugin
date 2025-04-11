@@ -14,13 +14,14 @@ import './themes/variables.css';
 setupIonicReact();
 interface AppProps {
   data: string;
+  IosAlertMessage: string;
 }
-const NfcEmulation: React.FC<AppProps> = ({ data }) => {
-  const paramRef = useRef<string>(data); // Create a ref
+const NfcEmulation: React.FC<AppProps> = ({ data,IosAlertMessage }) => {
+  const paramRef = useRef<string>(data);
 
   return (
-    <NfcProvider initialValue={paramRef.current}>
-      <Home/> {/* Pass it to Home */}
+    <NfcProvider initialValue={paramRef.current} alertMessage={IosAlertMessage}>
+      <Home/> 
     </NfcProvider>
   );
 };

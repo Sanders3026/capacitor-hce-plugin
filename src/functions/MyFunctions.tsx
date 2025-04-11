@@ -16,13 +16,14 @@ interface NfcContextType {
 
 const NfcContext = createContext<NfcContextType | undefined>(undefined);
 
-export const NfcProvider = ({ children, initialValue }: { children: ReactNode; initialValue: string }) => {
+export const NfcProvider = ({ children, initialValue,alertMessage }: { children: ReactNode; initialValue: string;alertMessage:string }) => {
   const [datas, setDatas] = useState<string>(initialValue);
   const [started, setStarted] = useState(false);
   const [scanCompleted, setScanCompleted] = useState(false);
   const [scanError, setScanError] = useState(false);
   const datasRef = useRef<string>(initialValue);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [alertShown, setAlertShown] = useState(false); 
 
   const resetTimeout = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -63,15 +64,20 @@ export const NfcProvider = ({ children, initialValue }: { children: ReactNode; i
     if (Capacitor.getPlatform() === "ios") {
       if (datasRef.current) {
         try {
+          if (!alertShown) {
+            HCECapacitorPlugin.addListener('IosNotSupported', () => {
+              alert(alertMessage); 
+              setStarted(false); 
+              setAlertShown(true);
+            });
+          }
+  
           StartIosEmulation(datasRef.current);
-          HCECapacitorPlugin.addListener("IosNotSupported", () => {
-            alert("NFC is not supported on this device.");
-          });
-          setStarted(true);
-          
+          setStarted(true); 
         } catch (error) {
           console.error("Error starting NFC emulation on iOS:", error);
           alert(`Failed to start NFC emulation on iOS: ${error}`);
+          setStarted(false); 
         }
       } else {
         alert("Please enter data to emulate.");
@@ -89,8 +95,9 @@ export const NfcProvider = ({ children, initialValue }: { children: ReactNode; i
         } catch (error) {
           console.error("Error starting NFC emulation on Android:", error);
           alert(`Failed to start NFC emulation on Android: ${error}`);
+          setStarted(false); 
         }
-      }
+      } 
     }
   };
 

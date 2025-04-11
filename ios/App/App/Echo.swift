@@ -9,9 +9,10 @@ public class IosEmulator: CAPPlugin {
     private var timeoutTask: DispatchWorkItem?  // Store timeout task
 
     @objc func StartIosEmulation(_ call: CAPPluginCall) {
+        let stringData = call.getString("Data") ?? "Error Reading Data"
         guard #available(iOS 17.4, *) else {
                    call.reject("NFC card emulation requires iOS 17.4 or later")
-            self.notifyListeners("IosNotSupported", data: ["message": message])
+            self.notifyListeners("IosNotSupported", data: ["message": "ios unsupported"])
 
                    return
                }
@@ -21,7 +22,7 @@ public class IosEmulator: CAPPlugin {
                    call.reject("Invalid NDEF data")
                    return
                }
-        let stringData = call.getString("Data") ?? "Error Reading Data"
+        
         let utf8Data = Data(stringData.utf8)
         let payloadLength = utf8Data.count + 3
         let ndefMessage: [UInt8] = [
@@ -110,12 +111,12 @@ public class IosEmulator: CAPPlugin {
             return
         }
 
-        guard await CardSession.isEligible else {
-            call.reject("Device can't emulate NFC cards")
-            return
-        }
+        
+        
      Task {
-    
+         guard await CardSession.isEligible else {
+             call.reject("Device can't emulate NFC cards")
+             return}
 
     var cardSession: CardSession
 

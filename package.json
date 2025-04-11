@@ -1,6 +1,6 @@
 {
   "name": "capacitor-hce-plugin-int",
-  "version": "1.7.7",
+  "version": "1.8.0",
   "description": "Plugin to make your capacitor app to support NFC HCE",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
